@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.*;
 
 /**
  * This class is used to create a tree structure of objects. Each element in the
@@ -47,7 +48,7 @@ import java.util.Set;
  * @see HashTreeTraverser
  * @see SearchByClass
  */
-public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable {
+public class HashTree extends AbstractMap<Object,HashTree> implements Serializable, Map<Object, HashTree>, Cloneable {
 
     private static final long serialVersionUID = 240L;
 
@@ -55,7 +56,8 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
     private static final String FOUND = "found"; // $NON-NLS-1$
 
     // N.B. The keys can be either JMeterTreeNode or TestElement
-    protected final Map<Object, HashTree> data;
+    protected final IdentityHashMap<Object, HashTree> data;
+    
 
     /**
      * Creates an empty new HashTree.
@@ -68,7 +70,7 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      * Allow subclasses to provide their own Map.
      * @param _map {@link Map} to use
      */
-    protected HashTree(Map<Object, HashTree> _map) {
+    protected HashTree(IdentityHashMap<Object, HashTree> _map) {
         this(_map, null);
     }
 
@@ -79,7 +81,7 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      *            name of the new top-level node
      */
     public HashTree(Object key) {
-        this(new HashMap<Object, HashTree>(), key);
+        this(new IdentityHashMap<Object, HashTree>(), key);
     }
     
     /**
@@ -93,11 +95,11 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      *            the object to be used as the key for the root node (may be
      *            <code>null</code>, in which case no root node will be created)
      */
-    private HashTree(Map<Object, HashTree> _map, Object key) {
+    private HashTree(IdentityHashMap<Object, HashTree> _map, Object key) {
         if(_map != null) {
             data = _map;
         } else {
-            data = new HashMap<>();
+            data = new IdentityHashMap<>();
         }
         if(key != null) {
             data.put(key, new HashTree());
@@ -112,9 +114,11 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      * @see #add(HashTree)
      * @see java.util.Map#putAll(Map)
      */
+
     @Override
-    public void putAll(Map<?, ? extends HashTree> map) {
-        if (map instanceof HashTree) {
+
+    public void putAll(Map<?,? extends HashTree> map) {
+        if ( map instanceof HashTree) {
             this.add((HashTree) map);
         } else {
             throw new UnsupportedOperationException("can only putAll other HashTree objects");
@@ -214,7 +218,7 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      *            a collection of objects to be added to the created HashTree.
      */
     public HashTree(Collection<?> keys) {
-        data = new HashMap<>();
+        data = new IdentityHashMap<>();
         for (Object o : keys) {
             data.put(o, new HashTree());
         }
@@ -228,7 +232,7 @@ public class HashTree implements Serializable, Map<Object, HashTree>, Cloneable 
      *            array with names for the new top-level nodes
      */
     public HashTree(Object[] keys) {
-        data = new HashMap<>();
+        data = new IdentityHashMap<>();
         for (Object key : keys) {
             data.put(key, new HashTree());
         }
