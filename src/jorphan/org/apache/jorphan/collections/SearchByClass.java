@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 /**
  * Useful for finding all nodes in the tree that represent objects of a
@@ -55,7 +56,7 @@ import java.util.Map;
 public class SearchByClass<T> implements HashTreeTraverser {
     private final List<T> objectsOfClass = new LinkedList<>();
 
-    private final Map<Object, ListedHashTree> subTrees = new HashMap<>();
+    private final IdentityHashMap<Object, ListedHashTree> subTrees = new IdentityHashMap<>();
 
     private final Class<T> searchClass;
 
