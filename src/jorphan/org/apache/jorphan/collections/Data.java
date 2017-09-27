@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 import org.slf4j.LoggerFactory;
 import org.apache.jorphan.util.JOrphanUtils;
@@ -43,7 +44,7 @@ public class Data implements Serializable {
 
     private static final long serialVersionUID = 240L;
 
-    private final Map<String, List<Object>> data;
+    private final IdentityHashMap<String, List<Object>> data;
 
     private List<String> header;
 
@@ -56,7 +57,7 @@ public class Data implements Serializable {
      */
     public Data() {
         header = new ArrayList<>();
-        data = new HashMap<>();
+        data = new IdentityHashMap<>();
         currentPos = -1;
         size = currentPos + 1;
     }
